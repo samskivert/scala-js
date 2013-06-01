@@ -7,7 +7,7 @@
     var isObject = elemShortName === "Object";
     var name = "scala.runtime." +
       (isVolatile ? "Volatile" : "") + elemShortName + "Ref";
-    var constructorName = "<init>("+elemCodeName+")";
+    var constructorName = "new\u0393"+elemCodeName;
 
     $env.registerClass(name, function($env) {
       var ObjectClass = $env.c["java.lang.Object"];
@@ -20,7 +20,7 @@
       Class.prototype.constructor = Class;
 
       Class.prototype[constructorName] = function(elem) {
-        ObjectClass.prototype["<init>()"].call(this);
+        ObjectClass.prototype.new\u0393.call(this);
         this.$jsfield$elem = elem;
         return this;
       }

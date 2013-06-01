@@ -60,14 +60,16 @@ trait JSEncoding extends SubComponent { self: GenJSCode =>
 
   def encodeMethodSym(sym: Symbol)(implicit pos: Position): js.PropertyName = {
     require(sym.isMethod, "encodeMethodSym called with non-method symbol: " + sym)
-    js.PropertyName(sym.name.decoded + makeParamsString(sym))
+    js.PropertyName((sym.name.decoded match {
+      case "<init>" => "new"
+      case nm => nm
+    }) + makeParamsString(sym))
   }
 
   def encodeStaticMemberSym(sym: Symbol)(implicit pos: Position): js.PropertyName = {
     require(sym.isStaticMember,
         "encodeStaticMemberSym called with non-static symbol: " + sym)
-    js.PropertyName(sym.name.decoded +
-        makeParamsString(Nil, internalName(sym.tpe)))
+    js.PropertyName(sym.name.decoded + "Γ" + internalName(sym.tpe))
   }
 
   def encodeLocalSym(sym: Symbol)(implicit pos: Position): js.Ident = {
@@ -145,12 +147,8 @@ trait JSEncoding extends SubComponent { self: GenJSCode =>
 
   private def makeParamsString(sym: Symbol): String = {
     val tpe = sym.tpe
-    makeParamsString(tpe.params map (p => internalName(p.tpe)),
-        if (sym.isClassConstructor) "" else internalName(tpe.resultType))
+    tpe.params map (p => internalName(p.tpe)) mkString("Γ", "", "")
   }
-
-  private def makeParamsString(paramTypeNames: List[String], resultTypeName: String) =
-    paramTypeNames.mkString("(", "", ")") + resultTypeName
 
   /** Compute the internal name for a type
    *  The internal name is inspired by the encoding of the JVM:
@@ -176,8 +174,8 @@ trait JSEncoding extends SubComponent { self: GenJSCode =>
       cls match {
         case definitions.ObjectClass => "O" // or A, for Any?
         case definitions.StringClass => "T" // S is taken, use T for Text
-        case _ => "L"+encodeFullName(cls)+";"
+        case _ => "L"+encodeFullName(cls).replace('.', '$')+"Γ"
       }
-    case ARRAY(elem) => "["+internalName(elem)
+    case ARRAY(elem) => "Δ"+internalName(elem)
   }
 }

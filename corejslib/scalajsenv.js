@@ -172,8 +172,8 @@ function $ScalaJSEnvironmentClass(global) {
   this.createClassInstance = function(data) {
     /* Keep the full mangled name here because the constructor is private
      * and hence does not appear in the JavaScript bridge. */
-    return new this.c["java.lang.Class"]()
-      ["<init>(Lscala.js.Dynamic;Lscala.js.Dynamic;)"](this, data);
+    return new this.c["java.lang.Class"]().
+      new\u0393Lscala$js$Dynamic\u0393Lscala$js$Dynamic\u0393(this, data);
   }
 
   this.registerNative = function(fullName, nativeFunction) {
@@ -213,7 +213,7 @@ function $ScalaJSEnvironmentClass(global) {
 
     function ArrayClass(arg) {
       ObjectClass.call(this);
-      ObjectClass.prototype["<init>()"].call(this);
+      ObjectClass.prototype.new\u0393.call(this);
 
       if (typeof(arg) === "number") {
         // arg is the length of the array
@@ -272,7 +272,7 @@ function $ScalaJSEnvironmentClass(global) {
   };
 
   this.throwClassCastException = function(instance, classFullName) {
-    throw new this.c["java.lang.ClassCastException"]()["<init>(T)"](
+    throw new this.c["java.lang.ClassCastException"]().new\u0393T(
       instance + " is not an instance of " + classFullName);
   }
 
@@ -301,7 +301,7 @@ function $ScalaJSEnvironmentClass(global) {
 
   this.anyEqEq = function(lhs, rhs) {
     if (this.isScalaJSObject(lhs)) {
-      return this.m["scala.runtime.BoxesRunTime"]["equals(OO)Z"](lhs, rhs);
+      return this.m["scala.runtime.BoxesRunTime"].equals\u0393OO(lhs, rhs);
     } else {
       return lhs === rhs;
     }
@@ -309,14 +309,14 @@ function $ScalaJSEnvironmentClass(global) {
 
   this.anyRefEqEq = function(lhs, rhs) {
     if (this.isScalaJSObject(lhs))
-      return lhs["equals(O)Z"](rhs);
+      return lhs.equals\u0393O(rhs);
     else
       return lhs === rhs;
   }
 
   this.objectGetClass = function(instance) {
     if (this.isScalaJSObject(instance) || (instance === null))
-      return instance["getClass()Ljava.lang.Class;"]();
+      return instance.getClass\u0393();
     else if (typeof(instance) === "string")
       return this.classes["java.lang.String"].cls;
     else
@@ -325,7 +325,7 @@ function $ScalaJSEnvironmentClass(global) {
 
   this.objectClone = function(instance) {
     // TODO
-    throw new this.c["scala.NotImplementedError"]()["<init>()"]();
+    throw new this.c["scala.NotImplementedError"]().new\u0393();
   }
 
   this.objectFinalize = function(instance) {
@@ -342,14 +342,14 @@ function $ScalaJSEnvironmentClass(global) {
 
   this.objectEquals = function(instance, rhs) {
     if (this.isScalaJSObject(instance) || (instance === null))
-      return instance["equals(O)Z"]();
+      return instance.equals\u0393O(rhs);
     else
       return instance === rhs;
   }
 
   this.objectHashCode = function(instance) {
     if (this.isScalaJSObject(instance))
-      return instance["hashCode()I"]();
+      return instance.hashCode\u0393();
     else
       return 42; // TODO
   }
@@ -370,25 +370,25 @@ function $ScalaJSEnvironmentClass(global) {
       return this.m["java.lang.Boolean"].$jsfield$FALSE;
   }
   this.bC = function(value) {
-    return new this.c["java.lang.Character"]()["<init>(C)"](value);
+    return new this.c["java.lang.Character"]().new\u0393C(value);
   }
   this.bB = function(value) {
-    return new this.c["java.lang.Byte"]()["<init>(B)"](value);
+    return new this.c["java.lang.Byte"]().new\u0393B(value);
   }
   this.bS = function(value) {
-    return new this.c["java.lang.Short"]()["<init>(S)"](value);
+    return new this.c["java.lang.Short"]().new\u0393S(value);
   }
   this.bI = function(value) {
-    return new this.c["java.lang.Integer"]()["<init>(I)"](value);
+    return new this.c["java.lang.Integer"]().new\u0393I(value);
   }
   this.bJ = function(value) {
-    return new this.c["java.lang.Long"]()["<init>(J)"](value);
+    return new this.c["java.lang.Long"]().new\u0393J(value);
   }
   this.bF = function(value) {
-    return new this.c["java.lang.Float"]()["<init>(F)"](value);
+    return new this.c["java.lang.Float"]().new\u0393F(value);
   }
   this.bD = function(value) {
-    return new this.c["java.lang.Double"]()["<init>(D)"](value);
+    return new this.c["java.lang.Double"]().new\u0393D(value);
   }
 
   // Unboxes - inline all the way through obj.xValue()

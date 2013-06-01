@@ -210,12 +210,15 @@ trait JSTrees { self: scalajs.JSGlobal =>
 
     object DynamicSelect {
       def apply(qualifier: Tree, item: Tree)(implicit pos: Position) = {
-        item match {
-          case StringLiteral(name) if isValidIdentifier(name) =>
-            DotSelect(qualifier, Ident(name)(item.pos))
-          case _ =>
-            BracketSelect(qualifier, item)
-        }
+        // TEMP: force use of BracketSelect always because we don't want Closure to rename selects
+        // from $env.global
+        BracketSelect(qualifier, item)
+        // item match {
+        //   case StringLiteral(name) if isValidIdentifier(name) =>
+        //     DotSelect(qualifier, Ident(name)(item.pos))
+        //   case _ =>
+        //     BracketSelect(qualifier, item)
+        // }
       }
 
       def unapply(tree: Tree): Option[(Tree, Tree)] = tree match {

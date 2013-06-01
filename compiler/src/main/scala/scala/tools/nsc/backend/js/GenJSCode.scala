@@ -1839,7 +1839,7 @@ abstract class GenJSCode extends SubComponent
         implicit pos: Position): js.Tree = {
       /* TODO Improve this, so that the JS name is not bound to the Scala name
        * (idea: annotation on the class? optional annot?) */
-      val className = js.Ident(sym.nameString)
+      val className = js.StringLiteral(sym.nameString)
       genSelectInGlobalScope(className)
     }
 
@@ -1848,14 +1848,17 @@ abstract class GenJSCode extends SubComponent
         implicit pos: Position): js.Tree = {
       /* TODO Improve this, so that the JS name is not bound to the Scala name
        * (idea: annotation on the class? optional annot?) */
-      val moduleName = js.Ident(sym.nameString)
+      val moduleName = js.StringLiteral(sym.nameString)
       genSelectInGlobalScope(moduleName)
     }
 
     /** Gen JS code selecting a field of the global scope */
-    private def genSelectInGlobalScope(property: js.PropertyName)(
+    private def genSelectInGlobalScope(property: js.StringLiteral)(
         implicit pos: Position): js.Tree = {
-      js.Select(envField("g"), property)
+      // TEMP: use bracket select to ensure that Closure does not rename accesses to global
+      // variables that go through our global scope accessor
+      js.BracketSelect(envField("g"), property)
+      // js.Select(envField("g"), property)
     }
 
     /** Gen actual actual arguments to a primitive JS call
